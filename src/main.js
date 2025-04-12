@@ -14,4 +14,4 @@ const i18n = createI18n({
     })
 
 
-createApp(App).use(router).mount('#app').use(i18n)
+createApp(App).use(router).use(i18n).mount('#app')
