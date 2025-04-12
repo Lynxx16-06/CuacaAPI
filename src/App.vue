@@ -1,14 +1,20 @@
 <template>
+  <div class="flex justify-between p-5">
+    <h1 class="md:hidden ">{{ location }}</h1>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 md:hidden">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+  </svg>
+  </div>
   <div>
-    <nav class="flex justify-around m-auto p-5 container border-b border-gray-400">
+    <nav class="md:flex md:justify-around m-auto p-5 container border-b hidden border-gray-400">
       <div class="flex items-center gap-10">
-        <div class="flex items-center gap-4">
-          <span>{{ dayName }}, {{ time }}</span>
-          <h1 class="text-2xl">CuacaHariIni</h1>
+        <div class="flex items-center md:justify-end justify-between w-full md:gap-4">
+          <span class="hidden md:flex">{{ dayName }}, {{ time }}</span>
+          <h1 class="text-2xl hidden md:flex">CuacaHariIni</h1>
         </div>
         <div
           v-if="location"
-          class="text-sm flex items-center gap-3 underline text-gray-900 italic"
+          class="text-sm items-center gap-3 underline hidden md:flex text-gray-900 italic"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +39,7 @@
         </div>
         <div v-if="error" class="text-red-500 text-sm italic">{{ error }}</div>
       </div>
-      <ul class="flex gap-10">
+      <ul class="md:flex hidden gap-10">
         <!-- Tambahkan Search -->
         <div class="flex gap-2 items-center">
           <input
@@ -70,6 +76,7 @@ export default {
   data() {
     return {
       location: null,
+      locationMobile: null,
       error: null,
       dayName: '',
       dateString: '',
@@ -104,7 +111,21 @@ export default {
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
-          this.location = `${data.location.name}, ${data.location.region}, ${data.location.country}`;
+          // this.locationMobile = `${data.locationMobile.name}`
+          this.location = `${data.location.name}`;
+        })
+        .catch(() => {
+          this.error = "Gagal ambil lokasi";
+        });
+    },
+    getLocationNameMobile(lat, lon) {
+      const apiKey = "8f3a0fd29e8045b68c8101313251104";
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`;
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          this.locationMobile = `${data.locationMobile.name}`;
         })
         .catch(() => {
           this.error = "Gagal ambil lokasi";
